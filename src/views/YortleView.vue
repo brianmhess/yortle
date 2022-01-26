@@ -1,11 +1,35 @@
 <template>
   <div class="main">
     <v-row align="center" justify="center">
-      <v-card max-width="600">
+      <v-card max-width="410">
+        <v-card-title>
+          <v-row>
+            <v-spacer/>
+            <v-btn fab @click="showHelp = true"><v-icon>mdi-help</v-icon></v-btn>
+          </v-row>
+        </v-card-title>
+        <v-dialog v-model="showHelp" max-width="410">
+          <v-card>
+            <v-card-title class="justify-center">How to play</v-card-title>
+            <v-card-subtitle class="justify-center">Guess the word in 6 tries.</v-card-subtitle>
+            <v-card-text>
+              <p>Each guess must be a valid 5 letter word</p>
+              <p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
+              <v-divider/>
+              <ul>
+                <li>A <font color="green">green</font> letter box means the letter is correct and in the correct space.</li>
+                <li>An <font color="orange">orange</font> letter box means the letter is in the word, but in the wrong space.</li>
+                <li>A <b>grey</b> letter box means the letter is not in the word.</li>
+              </ul>
+              <v-divider/>
+              <p>You can share this puzzle for this secret word by sharing the URL. Each word has an ID.</p>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
         <v-container>
           <v-row justify="center">
             <div @click="chooseWord">
-              <img alt="The Turtle" src="../assets/logo.png" width="200">
+              <img alt="Get another word" src="../assets/logo.png" width="200">
             </div>
           </v-row>
           <v-row><p/></v-row>
@@ -16,13 +40,16 @@
             <v-card>
               <v-card-title class="justify-center">You got it!</v-card-title>
               <v-card-subtitle class="text-center">{{secretWord ? secretWord.toUpperCase() : "{none}"}}</v-card-subtitle>
-              <p class="text-center">Yordle <a :href="`http://localhost:9999/${secretIdx}`">{{secretIdx}}</a> {{ nextGuess }}/6</p>
+              <p class="text-center">Yordle <a :href="`https://brianmhess.github.io/yortle/${secretIdx}`">{{secretIdx}}</a> {{ nextGuess }}/6</p>
               <p class="text-center" v-for="(r, idx) in cutAndPastable()" :key="idx"> {{ r }} </p>
               <div class="text-center"><v-btn color="green" @click="copySuccess">Share your success</v-btn></div>
             </v-card>
           <!-- </v-row> -->
         </v-dialog>
-        <v-dialog v-model="wordNotFound" width="500" height="100">
+        <v-snackbar v-model="snackbar" timeout="3000">
+          Saved to your clipboard
+        </v-snackbar>
+        <v-dialog v-model="wordNotFound" width="410" height="100">
           <v-card>
             <v-card-title class="justify-center">Word not found in dictionary</v-card-title>
           </v-card>
@@ -56,8 +83,8 @@
           </v-container>
 
           <v-container v-else>
-            <v-row v-for="(r,idx) in letters" :key="idx">
-              <v-col v-if="idx == 2" cols="1"/>
+            <v-row v-for="(r,idx) in letters" :key="idx" justify="center">
+              <!-- <v-col v-if="idx == 2" cols="1"/>
               <v-col v-for="jdx in Array(r.length).keys()" :key="jdx">
                 <v-chip text-color="black" :color="keyColor(r.charAt(jdx))" @click="onKeyPress(r.charAt(jdx))"> {{ r.charAt(jdx) }} </v-chip>
               </v-col>
@@ -66,7 +93,10 @@
               </v-col>
               <v-col v-if="idx == 2">
                 <v-chip color="black" outlined @click="onKeyPress('{enter}')"> Enter </v-chip>
-              </v-col>
+              </v-col> -->
+              <v-chip class="ma-1" v-for="jdx in Array(r.length).keys()" :key="jdx" ext-color="black" :color="keyColor(r.charAt(jdx))" @click="onKeyPress(r.charAt(jdx))"> {{ r.charAt(jdx) }} </v-chip>
+              <v-chip class="ma-1" v-if="idx == 1" color="black" outlined @click="onKeyPress('{del}')"> Del </v-chip>
+              <v-chip class="ma-1" v-if="idx == 2" color="black" outlined @click="onKeyPress('{enter}')"> Enter </v-chip>
             </v-row>
           </v-container>
         </v-card>
@@ -99,6 +129,8 @@ export default {
       gameWon: false,
       gameWonDialog: false,
       gameLost: false,
+      snackbar: false,
+      showHelp: false,
     }
   },
   created() {
@@ -304,8 +336,10 @@ export default {
       var tstr = this.cutAndPastable()
       var retstr = `Yortle ${this.secretIdx} ${this.nextGuess}/6\n`
       retstr = retstr.concat(tstr.join("\n"))
+      retstr = retstr.concat(`\nhttps://brianmhess.github.io/yortle/${this.secretIdx}`)
       navigator.clipboard.writeText(retstr);
       console.log("copySuccess\n", retstr)
+      this.snackbar = true
     },
   }
 }
