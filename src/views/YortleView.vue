@@ -101,6 +101,7 @@ export default {
     this.secretWord = this.wordList[this.secretIdx]
     window.addEventListener("keyup", e => this.onKeyboardPress(e))
     this.$watch(() => this.$route.params, () => {this.reset()})
+    console.log("Env: ", process.env)
   },
   methods: {
     reset() {
