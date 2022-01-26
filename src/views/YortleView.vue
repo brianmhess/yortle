@@ -102,11 +102,11 @@ export default {
     }
   },
   created() {
+    this.$watch(() => this.$route.params, () => {this.reset()})
     if (this.$route.params.gameidx < 0)
       this.chooseWord()
     this.secretWord = this.wordList[this.secretIdx]
     window.addEventListener("keyup", e => this.onKeyboardPress(e))
-    this.$watch(() => this.$route.params, () => {this.reset()})
   },
   methods: {
     reset() {
@@ -117,6 +117,7 @@ export default {
       this.great = []
       this.good = []
       this.gameWon = false
+      this.gameLost = false
       this.secretIdx = this.$route.params.gameidx
       this.secretWord = this.wordList[this.secretIdx]
     },
@@ -166,6 +167,8 @@ export default {
       if (this.gameWon)
         return
       if (button == "{del}") {
+        if (this.nextLetter == 0)
+          return
         this.guesses.splice(this.nextGuess, 1, this.guesses[this.nextGuess].substring(0, this.guesses[this.nextGuess].length-1))
         this.nextLetter = this.nextLetter - 1
         return

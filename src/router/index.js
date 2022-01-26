@@ -14,6 +14,10 @@ const routes = [
     path: '/yortle/:gameidx',
     name: 'YortleView',
     component: YortleView
+  },
+  {
+    path: '*',
+    redirect: '/yortle/-1'
   }
 ]
 
