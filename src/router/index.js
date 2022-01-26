@@ -26,5 +26,11 @@ const router = new VueRouter({
   base: '/',
   routes
 })
+router.beforeResolve((to, from, next) => {
+  // console.log("from: ", from)
+  // console.log("to: ", to)
+  // console.log("next: ", next)
+  next()
+})
 
 export default router

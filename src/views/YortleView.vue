@@ -102,6 +102,7 @@ export default {
     }
   },
   created() {
+    // console.log(this.$route.params)
     this.$watch(() => this.$route.params, () => {this.reset()})
     if (this.$route.params.gameidx < 0)
       this.chooseWord()
