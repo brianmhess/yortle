@@ -7,11 +7,11 @@ import YortleView from '@/views/YortleView.vue'
 
 const routes = [
   {
-    path: '/',
-    redirect: '/-1'
+    path: '/yortle/',
+    redirect: '/yortle/-1'
   },
   {
-    path: '/:gameidx',
+    path: '/yortle/:gameidx',
     name: 'YortleView',
     component: YortleView
   }
@@ -19,7 +19,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: '/yortle/',
+  base: '/',
   routes
 })
 
