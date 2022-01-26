@@ -1,5 +1,5 @@
 module.exports = {
-  // publicPath: "/yortle/",
+  publicPath: "/yortle/",
   // devServer: {
   //   host: 'localhost',
   //   port: 9999
