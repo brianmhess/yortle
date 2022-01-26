@@ -38,10 +38,15 @@
         </v-container>
         <v-divider/>
         <v-card>
-          <v-container v-if="gameWon">
+          <v-container v-if="gameWon || gameLost">
             <v-row/>
-            <v-row justify="center">
+            <v-row justify="center" v-if="gameWon">
               <v-btn color="green" @click="gameWonDialog = true">Share Your Success</v-btn>
+            </v-row>
+            <v-row justfiy="center" v-if="gameLost">
+              <v-col cols="12">
+                <v-card-title class="justify-center">You LOST! The word was: {{ secretWord ? secretWord.toUpperCase() : "{none}" }}</v-card-title>
+              </v-col>
             </v-row>
             <v-row/>
             <v-row justify="center">
@@ -93,6 +98,7 @@ export default {
       wordNotFound: false,
       gameWon: false,
       gameWonDialog: false,
+      gameLost: false,
     }
   },
   created() {
@@ -101,7 +107,6 @@ export default {
     this.secretWord = this.wordList[this.secretIdx]
     window.addEventListener("keyup", e => this.onKeyboardPress(e))
     this.$watch(() => this.$route.params, () => {this.reset()})
-    console.log("Env: ", process.env)
   },
   methods: {
     reset() {
@@ -118,10 +123,21 @@ export default {
     chooseWord() {
       this.$router.push({name: "YortleView", params: {gameidx: Math.floor(Math.random() * this.wordList.length)}})
     },
+    lostGame() {
+      this.gameLost = true
+      var summary = {
+        result: "lost",
+        secretIdx: this.secretIdx,
+        secretWord: this.secretWord,
+        guesses: this.guesses,
+      }
+      console.log(summary)
+    },
     wonGame() {
       this.gameWon = true;
       this.gameWonDialog = true;
       var summary = {
+        result: "won",
         secretIdx: this.secretIdx,
         secretWord: this.secretWord,
         numGuesses: this.nextGuess,
@@ -173,6 +189,9 @@ export default {
               this.nextLetter = 0
               if (this.guesses[this.nextGuess-1] == this.secretWord) {
                 this.wonGame()
+              }
+              if ((this.nextGuess > 5) && !this.gameWon) {
+                this.lostGame();
               }
               this.checkLetters()
             }
