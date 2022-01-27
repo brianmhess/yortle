@@ -2,12 +2,12 @@
   <div class="main">
     <v-row align="center" justify="center">
       <v-card max-width="410">
-        <v-card-title>
+        <!-- <v-card-title>
           <v-row>
             <v-spacer/>
             <v-btn fab @click="showHelp = true"><v-icon>mdi-help</v-icon></v-btn>
           </v-row>
-        </v-card-title>
+        </v-card-title> -->
         <v-dialog v-model="showHelp" max-width="410">
           <v-card>
             <v-card-title class="justify-center">How to play</v-card-title>
@@ -27,10 +27,18 @@
           </v-card>
         </v-dialog>
         <v-container>
-          <v-row justify="center">
-            <div @click="chooseWord">
-              <img alt="Get another word" src="../assets/logo.png" width="200">
-            </div>
+          <v-row justify="space-between" align="center">
+            <v-col align="center">
+              <div @click="chooseWord">
+                <img title="Get another word" src="../assets/logo.png" width="100">
+              </div>
+            </v-col>
+            <v-col align="center">
+              <h1 text-align="center"> {{ secretIdx }} </h1>
+            </v-col>
+            <v-col align="center">
+              <v-btn fab @click="showHelp = true"><v-icon>mdi-help</v-icon></v-btn>
+            </v-col>
           </v-row>
           <v-row><p/></v-row>
         </v-container>
@@ -55,16 +63,16 @@
           </v-card>
         </v-dialog>
         <v-container>
-          <v-row v-for="(guess,idx) in guesses" :key="idx">
-            <v-col cols="1"></v-col>
-            <v-col v-for="jdx in Array(5).keys()" :key="jdx" cols="2">
+          <v-row v-for="(guess,idx) in guesses" :key="idx" no-gutters justify="center">
+            <!-- <v-col cols="1" class="ma-1"></v-col> -->
+            <v-col v-for="jdx in Array(5).keys()" :key="jdx" cols="2" class="ma-1">
               <v-btn depressed :ripple="false" tile :outlined="idx >= nextGuess" :color="boxColor(idx,jdx)" width="15" class="ma-0 min-button">{{ jdx > guess.length ? "" : guess.charAt(jdx) }}</v-btn>
             </v-col>
-            <v-col cols="1"></v-col>
+            <!-- <v-col cols="1" class="ma-1"></v-col> -->
           </v-row>
         </v-container>
         <v-divider/>
-        <v-card>
+        <!-- <v-card> -->
           <v-container v-if="gameWon || gameLost">
             <v-row/>
             <v-row justify="center" v-if="gameWon">
@@ -94,12 +102,12 @@
               <v-col v-if="idx == 2">
                 <v-chip color="black" outlined @click="onKeyPress('{enter}')"> Enter </v-chip>
               </v-col> -->
-              <v-chip class="ma-1" v-for="jdx in Array(r.length).keys()" :key="jdx" ext-color="black" :color="keyColor(r.charAt(jdx))" @click="onKeyPress(r.charAt(jdx))"> {{ r.charAt(jdx) }} </v-chip>
-              <v-chip class="ma-1" v-if="idx == 1" color="black" outlined @click="onKeyPress('{del}')"> Del </v-chip>
-              <v-chip class="ma-1" v-if="idx == 2" color="black" outlined @click="onKeyPress('{enter}')"> Enter </v-chip>
+              <v-chip class="ml-1 my-1" v-for="jdx in Array(r.length).keys()" :key="jdx" ext-color="black" :color="keyColor(r.charAt(jdx))" @click="onKeyPress(r.charAt(jdx))"> {{ r.charAt(jdx) }} </v-chip>
+              <v-chip class="ml-3 my-1" v-if="idx == 1" color="grey lighten-2" @click="onKeyPress('{del}')"> <v-icon small>mdi-backspace-outline</v-icon> </v-chip>
+              <v-chip class="ml-3 my-1" v-if="idx == 2" color="grey lighten-2" @click="onKeyPress('{enter}')"> <v-icon small>mdi-keyboard-return</v-icon> </v-chip>
             </v-row>
           </v-container>
-        </v-card>
+        <!-- </v-card> -->
       </v-card>
     </v-row>
   </div>

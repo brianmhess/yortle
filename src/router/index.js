@@ -5,10 +5,16 @@ Vue.use(VueRouter)
 
 import YortleView from '@/views/YortleView.vue'
 
+function todaysYortle() {
+  const date1 = new Date("2021-06-19")
+  const today = new Date()
+  return Math.floor((today.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24))
+}
+
 const routes = [
   {
     path: '/yortle/',
-    redirect: '/yortle/-1'
+    redirect: `/yortle/${todaysYortle()}`
   },
   {
     path: '/yortle/:gameidx',
@@ -17,7 +23,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: '/yortle/-1'
+    redirect: `/yortle/${todaysYortle()}`
   }
 ]
 
